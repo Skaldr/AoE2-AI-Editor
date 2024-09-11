@@ -1,6 +1,8 @@
-﻿namespace AoE2_AI_Editor
+﻿using System;
+
+namespace AoE2_AI_Editor
 {
-    partial class mainScreen
+    partial class MainForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,28 +31,27 @@
         private void InitializeComponent()
         {
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.fileMenu = new System.Windows.Forms.MenuStrip();
-            this.fileOpen = new System.Windows.Forms.ToolStripMenuItem();
+            this.topMenu = new System.Windows.Forms.MenuStrip();
+            this.fileSubMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.newFile = new System.Windows.Forms.ToolStripMenuItem();
             this.openFile = new System.Windows.Forms.ToolStripMenuItem();
             this.saveFile = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAs = new System.Windows.Forms.ToolStripMenuItem();
-            this.panel1 = new System.Windows.Forms.Panel();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.mainTextBox = new System.Windows.Forms.RichTextBox();
+            this.textPanel = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1.SuspendLayout();
-            this.fileMenu.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.topMenu.SuspendLayout();
             this.SuspendLayout();
+            this.Load += new System.EventHandler(this.MainForm_Load);
             // 
             // tableLayoutPanel1
             // 
             this.tableLayoutPanel1.ColumnCount = 2;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 85F));
-            this.tableLayoutPanel1.Controls.Add(this.fileMenu, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.panel1, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.topMenu, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.textPanel, 1, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -60,28 +61,28 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(800, 450);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
-            // fileMenu
+            // topMenu
             // 
-            this.tableLayoutPanel1.SetColumnSpan(this.fileMenu, 2);
-            this.fileMenu.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.fileMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileOpen});
-            this.fileMenu.Location = new System.Drawing.Point(0, 0);
-            this.fileMenu.Name = "fileMenu";
-            this.fileMenu.Size = new System.Drawing.Size(800, 24);
-            this.fileMenu.TabIndex = 0;
-            this.fileMenu.Text = "menuStrip1";
+            this.tableLayoutPanel1.SetColumnSpan(this.topMenu, 2);
+            this.topMenu.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.topMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileSubMenu});
+            this.topMenu.Location = new System.Drawing.Point(0, 0);
+            this.topMenu.Name = "topMenu";
+            this.topMenu.Size = new System.Drawing.Size(800, 24);
+            this.topMenu.TabIndex = 0;
+            this.topMenu.Text = "menuStrip1";
             // 
-            // fileOpen
+            // fileSubMenu
             // 
-            this.fileOpen.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileSubMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newFile,
             this.openFile,
             this.saveFile,
             this.saveAs});
-            this.fileOpen.Name = "fileOpen";
-            this.fileOpen.Size = new System.Drawing.Size(37, 20);
-            this.fileOpen.Text = "File";
+            this.fileSubMenu.Name = "fileSubMenu";
+            this.fileSubMenu.Size = new System.Drawing.Size(37, 20);
+            this.fileSubMenu.Text = "File";
             // 
             // newFile
             // 
@@ -111,18 +112,6 @@
             this.saveAs.Text = "Save as";
             this.saveAs.Click += new System.EventHandler(this.saveAs_Click);
             // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.SystemColors.Window;
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel1.Controls.Add(this.mainTextBox);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(123, 27);
-            this.panel1.Name = "panel1";
-            this.panel1.Padding = new System.Windows.Forms.Padding(20, 20, 20, 0);
-            this.panel1.Size = new System.Drawing.Size(674, 420);
-            this.panel1.TabIndex = 1;
-            // 
             // openFileDialog
             // 
             this.openFileDialog.FileName = "openFileDialog1";
@@ -132,18 +121,13 @@
             // 
             this.saveFileDialog.Filter = "Personnality file|*.per2|Personnality file|*.per";
             // 
-            // mainTextBox
+            // textPanel
             // 
-            this.mainTextBox.AcceptsTab = true;
-            this.mainTextBox.AutoWordSelection = true;
-            this.mainTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.mainTextBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.mainTextBox.Location = new System.Drawing.Point(20, 20);
-            this.mainTextBox.Name = "mainTextBox";
-            this.mainTextBox.Size = new System.Drawing.Size(630, 396);
-            this.mainTextBox.TabIndex = 3;
-            this.mainTextBox.TabStop = false;
-            this.mainTextBox.Text = "";
+            this.textPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textPanel.Location = new System.Drawing.Point(123, 27);
+            this.textPanel.Name = "textPanel";
+            this.textPanel.Size = new System.Drawing.Size(674, 420);
+            this.textPanel.TabIndex = 1;
             // 
             // mainScreen
             // 
@@ -155,25 +139,25 @@
             this.Text = "AoE2 Ai Editor";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            this.fileMenu.ResumeLayout(false);
-            this.fileMenu.PerformLayout();
-            this.panel1.ResumeLayout(false);
+            this.topMenu.ResumeLayout(false);
+            this.topMenu.PerformLayout();
             this.ResumeLayout(false);
 
         }
+
+
 
         #endregion
 
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
-        private System.Windows.Forms.MenuStrip fileMenu;
-        private System.Windows.Forms.ToolStripMenuItem fileOpen;
+        private System.Windows.Forms.MenuStrip topMenu;
+        private System.Windows.Forms.ToolStripMenuItem fileSubMenu;
         private System.Windows.Forms.ToolStripMenuItem newFile;
         private System.Windows.Forms.ToolStripMenuItem openFile;
         private System.Windows.Forms.ToolStripMenuItem saveFile;
         private System.Windows.Forms.ToolStripMenuItem saveAs;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.RichTextBox mainTextBox;
+        private System.Windows.Forms.Panel textPanel;
     }
 }
