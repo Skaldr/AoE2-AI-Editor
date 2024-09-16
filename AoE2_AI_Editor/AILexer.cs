@@ -24,9 +24,6 @@ namespace AoE2_AI_Editor
             // Back up to the line start
             var line = scintilla.LineFromPosition(startPos);
             startPos = scintilla.Lines[line].Position;
-
-            int bracketsOpened = 0;
-
             int length = 0;
             AiWordType state = AiWordType.Default;
 
