@@ -42,60 +42,6 @@ namespace AoE2_AI_Editor
 
         }
 
-        private void setWindowTitle()
-
-        {
-            string fileName = filePath.Split('\\').Last();
-            this.Text = "AoE2 AI Editor | " + fileName;
-        }
-
-
-
-        private void saveFile_Click(object sender, EventArgs e)
-        {
-            // Append text to an existing file named "WriteLines.txt".
-            if (filePath == null)
-            {
-                saveAs_Click(sender, e);
-            }
-            else
-            {
-                using (StreamWriter outputFile = new StreamWriter(filePath, false))
-                {
-                    outputFile.Write(brutText);
-                    Console.WriteLine("Saved!");
-                }
-            }
-
-        }
-
-        private void openFile_Click(object sender, EventArgs events)
-        {
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                try
-                {
-                    filePath = openFileDialog.FileName;
-                    StreamReader streamReader = new StreamReader(openFileDialog.FileName);
-
-
-                    string text = streamReader.ReadToEnd();
-
-                    brutText = text;
-                    textArea.Text = brutText;
-
-                    streamReader.Dispose();
-                    setWindowTitle();
-  
-                }
-                catch (IOException exeption)
-                {
-                    Console.WriteLine("The file could not be read:");
-                    Console.WriteLine(exeption.Message);
-                }
-            }
-        }
-
         #region Initializers
 
         private void scintilla_StyleNeeded(object sender, StyleNeededEventArgs e)
@@ -113,14 +59,33 @@ namespace AoE2_AI_Editor
             textArea.StyleResetDefault();
             textArea.Styles[Style.Default].Font = "Consolas";
             textArea.Styles[Style.Default].Size = 10;
-            textArea.Styles[Style.Default].BackColor = this.BackColor;
+            textArea.Styles[Style.Default].BackColor = Color.White;
             textArea.Styles[Style.Default].ForeColor = Color.Black;
             textArea.StyleClearAll();
 
+
+            textArea.Styles[(int)AiWordType.Default].ForeColor = Color.Black;
             textArea.Styles[(int)AiWordType.Comment].ForeColor = Color.Green;
+
             textArea.Styles[(int)AiWordType.Load_if_declare].ForeColor = Color.Orange;
-            textArea.Styles[(int)AiWordType.Unknown].Underline = true;
+            textArea.Styles[(int)AiWordType.Load_if_declare].Weight = 900;
+
+            textArea.Styles[(int)AiWordType.Load_if_object].ForeColor = Color.DarkRed;
+
             textArea.Styles[(int)AiWordType.Unknown].ForeColor = Color.Red;
+
+            textArea.Styles[(int)AiWordType.Defconst].ForeColor = Color.DarkBlue;
+            textArea.Styles[(int)AiWordType.Defconst].Weight = 900;
+
+            textArea.Styles[(int)AiWordType.Defrule].ForeColor = Color.Blue;
+            textArea.Styles[(int)AiWordType.Defrule].Weight = 900;
+
+            textArea.Styles[(int)AiWordType.Action].ForeColor = Color.DarkCyan;
+            textArea.Styles[(int)AiWordType.Condition].ForeColor = Color.Purple;
+
+            textArea.Styles[(int)AiWordType.Operator].ForeColor = Color.Red;
+
+            
 
             textArea.Lexer = Lexer.Container;
 
@@ -140,6 +105,56 @@ namespace AoE2_AI_Editor
 
         }
         #endregion
+
+        private void setWindowTitle()
+
+        {
+            string fileName = filePath.Split('\\').Last();
+            this.Text = "AoE2 AI Editor | " + fileName;
+        }
+
+        private void saveFile_Click(object sender, EventArgs e)
+        {
+            // Append text to an existing file named "WriteLines.txt".
+            if (filePath == null)
+            {
+                saveAs_Click(sender, e);
+            }
+            else
+            {
+                using (StreamWriter outputFile = new StreamWriter(filePath, false))
+                {
+                    outputFile.Write(brutText);
+                }
+            }
+
+        }
+        private void openFile_Click(object sender, EventArgs events)
+        {
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    filePath = openFileDialog.FileName;
+                    StreamReader streamReader = new StreamReader(openFileDialog.FileName);
+
+
+                    string text = streamReader.ReadToEnd();
+
+                    brutText = text;
+                    textArea.Text = brutText;
+
+                    streamReader.Dispose();
+                    setWindowTitle();
+
+                }
+                catch (IOException exeption)
+                {
+                    Console.WriteLine("The file could not be read:");
+                    Console.WriteLine(exeption.Message);
+                }
+            }
+        }
 
         private void saveAs_Click(object sender, EventArgs e)
         {
