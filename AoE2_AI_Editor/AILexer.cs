@@ -2,6 +2,7 @@
 using ScintillaNET;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
@@ -24,6 +25,8 @@ namespace AoE2_AI_Editor
         private const string defconst_keyword = "defconst";
 
         private readonly Char[] separation_char = [' ', '\n', '\r', ';', '(', ')', '\t'];
+
+        int lastCaretPos = 0;
 
 
         public AILexer() {
@@ -279,10 +282,59 @@ namespace AoE2_AI_Editor
             return outputType;
         }
 
-        private void processState(LexerState curretState, LexerState newState, string[] expectedKeyords)
+        private static bool IsBrace(int c)
         {
+            switch (c)
+            {
+                case '(':
+                case ')':
+                    return true;
+            }
 
+            return false;
         }
+
+        public void scintilla_UpdateUI(Scintilla scintilla)
+        {
+            // Has the caret changed position?
+            var caretPos = scintilla.CurrentPosition;
+            if (lastCaretPos != caretPos)
+            {
+                lastCaretPos = caretPos;
+                var bracePos1 = -1;
+                var bracePos2 = -1;
+
+                // Is there a brace to the left or right?
+                if (caretPos > 0 && IsBrace(scintilla.GetCharAt(caretPos - 1)))
+                    bracePos1 = (caretPos - 1);
+                else if (IsBrace(scintilla.GetCharAt(caretPos)))
+                    bracePos1 = caretPos;
+
+                if (bracePos1 >= 0)
+                {
+                    // Find the matching brace
+                    bracePos2 = scintilla.BraceMatch(bracePos1);
+                    if (bracePos2 == Scintilla.InvalidPosition)
+                    {
+                        scintilla.BraceBadLight(bracePos1);
+                        scintilla.HighlightGuide = 0;
+                    }
+                    else
+                    {
+                        scintilla.BraceHighlight(bracePos1, bracePos2);
+                        scintilla.HighlightGuide = scintilla.GetColumn(bracePos1);
+                    }
+                }
+                else
+                {
+                    // Turn off brace matching
+                    scintilla.BraceHighlight(Scintilla.InvalidPosition, Scintilla.InvalidPosition);
+                    scintilla.HighlightGuide = 0;
+                }
+            }
+        }
+
+
 
     }
 

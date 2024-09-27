@@ -36,6 +36,7 @@ namespace AoE2_AI_Editor
             textArea.Dock = System.Windows.Forms.DockStyle.Fill;
             textArea.TextChanged += (this.OnTextChanged);
             textArea.StyleNeeded += (this.scintilla_StyleNeeded);
+            textArea.UpdateUI += (this.scintilla_UpdateUI);
             initNumberMargin();
             initSyntaxColoring();
 
@@ -85,7 +86,10 @@ namespace AoE2_AI_Editor
 
             textArea.Styles[(int)AiWordType.Operator].ForeColor = Color.Red;
 
-            
+            textArea.IndentationGuides = IndentView.LookBoth;
+            textArea.Styles[Style.BraceLight].BackColor = Color.LightGray;
+            textArea.Styles[Style.BraceLight].ForeColor = Color.BlueViolet;
+            textArea.Styles[Style.BraceBad].ForeColor = Color.Red;
 
             textArea.Lexer = Lexer.Container;
 
@@ -104,9 +108,15 @@ namespace AoE2_AI_Editor
             nums.Mask = 0;
 
         }
-        #endregion
 
-        private void setWindowTitle()
+        private void scintilla_UpdateUI(object sender, UpdateUIEventArgs e)
+        {
+            aILexer.scintilla_UpdateUI(textArea);
+        }
+
+            #endregion
+
+            private void setWindowTitle()
 
         {
             string fileName = filePath.Split('\\').Last();

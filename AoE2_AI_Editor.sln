@@ -5,12 +5,6 @@ VisualStudioVersion = 17.11.35222.181
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AoE2_AI_Editor", "AoE2_AI_Editor\AoE2_AI_Editor.csproj", "{CED5E702-186D-4A83-A0B6-029F61C718A3}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Éléments de solution", "Éléments de solution", "{E5F48A4B-D348-472A-8520-123E1DBBEFA5}"
-	ProjectSection(SolutionItems) = preProject
-		..\..\..\Desktop\actions.json = ..\..\..\Desktop\actions.json
-		..\..\..\Desktop\conditions.json = ..\..\..\Desktop\conditions.json
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
