@@ -18,10 +18,10 @@ namespace AoE2_AI_Editor
     public partial class MainForm : Form
     {
 
-        ScintillaNET.Scintilla textArea;
-        private string brutText = "";
-        private string filePath;
-        private AILexer aILexer;
+        private List<FileModel> files = new List<FileModel>();
+        private FileModel currentFile;
+        AILexer aILexer;
+
 
         public MainForm()
         {
@@ -31,131 +31,60 @@ namespace AoE2_AI_Editor
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            textArea = new ScintillaNET.Scintilla();
-            textPanel.Controls.Add(textArea);
-            textArea.Dock = System.Windows.Forms.DockStyle.Fill;
-            textArea.TextChanged += (this.OnTextChanged);
-            textArea.StyleNeeded += (this.scintilla_StyleNeeded);
-            textArea.UpdateUI += (this.scintilla_UpdateUI);
-            initNumberMargin();
-            initSyntaxColoring();
+            currentFile = new FileModel(aILexer);
 
-
-        }
-
-        #region Initializers
-
-        private void scintilla_StyleNeeded(object sender, StyleNeededEventArgs e)
-        {
-            var startPos = textArea.GetEndStyled();
-            var endPos = e.Position;
-
-            aILexer.Style(textArea, startPos, endPos);
-        }
-
-        private void initSyntaxColoring()
-        {
-
-            // Configure the default style
-            textArea.StyleResetDefault();
-            textArea.Styles[Style.Default].Font = "Consolas";
-            textArea.Styles[Style.Default].Size = 10;
-            textArea.Styles[Style.Default].BackColor = Color.White;
-            textArea.Styles[Style.Default].ForeColor = Color.Black;
-            textArea.StyleClearAll();
-
-
-            textArea.Styles[(int)AiWordType.Default].ForeColor = Color.Black;
-            textArea.Styles[(int)AiWordType.Comment].ForeColor = Color.Green;
-
-            textArea.Styles[(int)AiWordType.Load_if_declare].ForeColor = Color.Orange;
-            textArea.Styles[(int)AiWordType.Load_if_declare].Weight = 900;
-
-            textArea.Styles[(int)AiWordType.Load_if_object].ForeColor = Color.DarkRed;
-
-            textArea.Styles[(int)AiWordType.Unknown].ForeColor = Color.Red;
-
-            textArea.Styles[(int)AiWordType.Defconst].ForeColor = Color.DarkBlue;
-            textArea.Styles[(int)AiWordType.Defconst].Weight = 900;
-
-            textArea.Styles[(int)AiWordType.Defrule].ForeColor = Color.Blue;
-            textArea.Styles[(int)AiWordType.Defrule].Weight = 900;
-
-            textArea.Styles[(int)AiWordType.Action].ForeColor = Color.DarkCyan;
-            textArea.Styles[(int)AiWordType.Condition].ForeColor = Color.Purple;
-
-            textArea.Styles[(int)AiWordType.Operator].ForeColor = Color.Red;
-
-            textArea.IndentationGuides = IndentView.LookBoth;
-            textArea.Styles[Style.BraceLight].BackColor = Color.LightGray;
-            textArea.Styles[Style.BraceLight].ForeColor = Color.BlueViolet;
-            textArea.Styles[Style.BraceBad].ForeColor = Color.Red;
-
-            textArea.Lexer = Lexer.Container;
+            tabPage1.Text = "New file";
+            System.Windows.Forms.Panel panel = new System.Windows.Forms.Panel();
+            panel.Dock = System.Windows.Forms.DockStyle.Fill;
+            files.Add(currentFile);
+            tabPage1.Controls.Add(panel);
+            panel.Controls.Add(currentFile.textArea);
+            tabControl1.SelectTab(files.Count() - 1);
 
         }
 
-        private void initNumberMargin()
-        {
-
-            textArea.Styles[Style.LineNumber].ForeColor = Color.Black;
-
-
-            var nums = textArea.Margins[1];
-            nums.Width = 30;
-            nums.Type = MarginType.Number;
-            nums.Sensitive = true;
-            nums.Mask = 0;
-
-        }
-
-        private void scintilla_UpdateUI(object sender, UpdateUIEventArgs e)
-        {
-            aILexer.scintilla_UpdateUI(textArea);
-        }
-
-            #endregion
-
-            private void setWindowTitle()
-
-        {
-            string fileName = filePath.Split('\\').Last();
-            this.Text = "AoE2 AI Editor | " + fileName;
-        }
 
         private void saveFile_Click(object sender, EventArgs e)
         {
             // Append text to an existing file named "WriteLines.txt".
-            if (filePath == null)
+            if (currentFile.filePath == null)
             {
                 saveAs_Click(sender, e);
             }
             else
             {
-                using (StreamWriter outputFile = new StreamWriter(filePath, false))
+                using (StreamWriter outputFile = new StreamWriter(currentFile.filePath, false))
                 {
-                    outputFile.Write(brutText);
+                    outputFile.Write(currentFile.brutText);
                 }
             }
 
         }
+
+        private void switchTab(object sender, System.Windows.Forms.TabControlEventArgs e)
+        {
+            currentFile = files.ElementAt(e.TabPageIndex);
+        }
+
         private void openFile_Click(object sender, EventArgs events)
         {
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
-                    filePath = openFileDialog.FileName;
+                    createNewTab();
+                    currentFile.filePath = openFileDialog.FileName;
                     StreamReader streamReader = new StreamReader(openFileDialog.FileName);
 
 
                     string text = streamReader.ReadToEnd();
 
-                    brutText = text;
-                    textArea.Text = brutText;
+                    currentFile.brutText = text;
+                    currentFile.textArea.Text = currentFile.brutText;
+
+                    tabControl1.SelectedTab.Text = currentFile.filePath.Split('\\').Last();
 
                     streamReader.Dispose();
-                    setWindowTitle();
 
                 }
                 catch (IOException exeption)
@@ -170,32 +99,34 @@ namespace AoE2_AI_Editor
         {
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                filePath= saveFileDialog.FileName;
-                using (StreamWriter outputFile = new StreamWriter(filePath, false))
+                currentFile.filePath = saveFileDialog.FileName;
+                tabControl1.SelectedTab.Text = currentFile.filePath.Split('\\').Last();
+                using (StreamWriter outputFile = new StreamWriter(currentFile.filePath, false))
                 {
-                    outputFile.Write(brutText);
+                    outputFile.Write(currentFile.brutText);
                 }
-                setWindowTitle();
             }
+        }
+
+        private void createNewTab()
+        {
+            currentFile = new FileModel(aILexer);
+
+            System.Windows.Forms.TabPage tabPage = new System.Windows.Forms.TabPage();
+            tabPage.Text = "New file *";
+            System.Windows.Forms.Panel panel = new System.Windows.Forms.Panel();
+            panel.Dock = System.Windows.Forms.DockStyle.Fill;
+            tabControl1.Controls.Add(tabPage);
+            files.Add(currentFile);
+            tabPage.Controls.Add(panel);
+            panel.Controls.Add(currentFile.textArea);
+            tabControl1.SelectTab(files.Count() - 1);
         }
 
         private void newFile_Click(object sender, EventArgs e)
         {
-            if (saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                filePath= saveFileDialog.FileName;
-                brutText = "";
-                using (StreamWriter outputFile = new StreamWriter(filePath, false))
-                {
-                    outputFile.Write(brutText);
-                }
-                setWindowTitle();
-            }
-        }
+            createNewTab();
 
-        private void OnTextChanged(object sender, EventArgs e)
-        {
-            brutText = textArea.Text;
         }
 
 
